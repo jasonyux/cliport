@@ -6,6 +6,8 @@ cliport/jobs/
 jobs/
 videos/
 checkpoints/
+data/
+.hydra/
 
 # Large Asserts
 cliport/environments/assets/google/
@@ -139,4 +141,3 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
-
