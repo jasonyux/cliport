@@ -1,6 +1,7 @@
 """Sorting Task."""
 
 import numpy as np
+import os
 from cliport.tasks.task import Task
 from cliport.utils import utils
 
@@ -22,7 +23,8 @@ class PlaceObjInContainer(Task):
         n_bowls = 1
         n_blocks = 1
         objects = {
-            'block': 'block/block.urdf'
+            'block': 'block/block.urdf',
+            'hexagon': 'kitting/object-template.urdf'
         }
         containers = {
             'box': 'container/container-template.urdf',
@@ -33,7 +35,7 @@ class PlaceObjInContainer(Task):
         zone_size = self.get_random_size(0.05, 0.3, 0.05, 0.3, 0.05, 0.05)
         bowl_size = (0.1, 0.1, 0)
         bowl_poses = []
-        container_color = np.random.choice(["green", "red", "yellow"])
+        container_color = np.random.choice(["green", "red"])
         container =  np.random.choice(list(containers.keys()))
         container_urdf = containers[container]
         for _ in range(n_bowls):
@@ -56,13 +58,22 @@ class PlaceObjInContainer(Task):
         blocks = []
         block_size = (0.02, 0.02, 0.02)
         for _ in range(n_blocks):
-            block_pose = self.get_random_pose(env, block_size)
-            block_id = env.add_object(obj_urdf, block_pose)
+            if obj == 'hexagon':
+                size = (0.2, 0.2, 0.05)
+                pose = self.get_random_pose(env, size)
+                fname = os.path.join(self.assets_root, 'kitting', '17.obj')
+                scale = [0.005, 0.005, 0.002]
+                replace = {'FNAME': (fname,), 'SCALE': scale, 'COLOR': utils.COLORS[obj_color]}
+                obj_urdf = self.fill_template(obj_urdf, replace)
+            else:
+                pose = self.get_random_pose(env, block_size)
+            block_id = env.add_object(obj_urdf, pose)
             p.changeVisualShape(block_id, -1, rgbaColor=utils.COLORS[obj_color] + [1])
 
             blocks.append((block_id, (0, None)))
+        
 
-        # Goal: each red block is in a different green bowl.
+        # Goal: place object into container
         self.goals.append((blocks, np.ones((len(blocks), len(bowl_poses))),
                            bowl_poses, False, True, 'pose', None, 1))
         self.lang_goals.append(self.lang_template.format(
