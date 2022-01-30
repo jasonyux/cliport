@@ -42,12 +42,17 @@ class PlaceObjInContainer(Task):
             'bowl': 'bowl/bowl.urdf'
         }
 
+        container_color = np.random.choice(["green", "red"])
+        container =  np.random.choice(list(containers.keys()))
+
+        obj_color = np.random.choice(["green", "red", "yellow"])
+        obj = np.random.choice(list(objects.keys()))
+
+        np.random.seed()
         # Add container.
         zone_size = self.get_random_size(0.15, 0.25, 0.15, 0.25, 0.05, 0.05)
         bowl_size = (0.1, 0.1, 0)
         bowl_poses = []
-        container_color = np.random.choice(["green", "red"])
-        container =  np.random.choice(list(containers.keys()))
         container_urdf = containers[container]
         for _ in range(n_bowls):
             if container == 'box': 
@@ -61,8 +66,6 @@ class PlaceObjInContainer(Task):
             bowl_poses.append(container_pose)
 
         # Add block.
-        obj_color = np.random.choice(["green", "red", "yellow"])
-        obj = np.random.choice(list(objects.keys()))
         obj_urdf = objects[obj]
         blocks = []
         block_size = (0.02, 0.02, 0.02)
