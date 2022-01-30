@@ -50,7 +50,8 @@ def main(cfg):
         episode, total_reward = [], 0
         seed += 2
 
-        for i in range(120):
+        collected = 0
+        while collected < 120:
             # Set seeds.
             np.random.seed(seed)
             random.seed(seed)
@@ -91,7 +92,8 @@ def main(cfg):
             # Only save completed demonstrations.
             if save_data and total_reward > 0.99:
                 dataset.add(seed, episode)
-            
+                collected += 1
+
             print(f"Done episode: {dataset.n_episodes}")
             # reset
             episode, total_reward = [], 0
