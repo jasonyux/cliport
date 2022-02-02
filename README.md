@@ -37,7 +37,6 @@ However, I am not sure if cliport can generate "balanced" dataset natively, as i
             # Set seeds.
             np.random.seed(seed)
             random.seed(seed)
-
 			# generate data
 	```
 	where:
@@ -47,18 +46,18 @@ However, I am not sure if cliport can generate "balanced" dataset natively, as i
 2. Then, to promote **randomness in the scene/table layout generated** even within the same instruction, I **added** the line in `place_obj_container.py`:
 	```python
 	def reset(self, env):
-			super().reset(env)
-			# some code omitted
+		super().reset(env)
+		# some code omitted
 
-			container_color = np.random.choice(["green", "red"])
-			container =  np.random.choice(list(containers.keys()))
+		container_color = np.random.choice(["green", "red"])
+		container =  np.random.choice(list(containers.keys()))
 
-			obj_color = np.random.choice(["green", "red", "yellow"])
-			obj = np.random.choice(list(objects.keys()))
+		obj_color = np.random.choice(["green", "red", "yellow"])
+		obj = np.random.choice(list(objects.keys()))
 
-			np.random.seed() # randomize layout regardless of the seed
+		np.random.seed() # randomize layout regardless of the seed
 
-			# generate layout
+		# generate layout
 	```
 
 This arguably is hardcoded, but within a limited time I think this should do.
